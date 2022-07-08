@@ -1,36 +1,46 @@
 <template>
- <div class="home">
-    <ItemListComponentVue :items="items"/>
- </div>
+  <div class="home">
+    <ItemsListComponent
+      :items="items"
+      :loading="loading"
+      @selectItem="onSelectItem"
+    />
+  </div>
 </template>
 
 
 <script lang="ts">
-import ItemListComponentVue from "@/components/items/ItemList.component.vue";
+import { defineComponent, computed, onMounted } from "vue"; // <-- add onMounted
+import store from "@/store";
+import ItemsListComponent from "@/components/items/ItemsList.component.vue";
 import { ItemInterface } from "@/models/items/Item.interface";
-import { defineComponent } from "vue";
-
 export default defineComponent({
-    name: 'Home',
-    components:{
-        ItemListComponentVue
-    },
-     setup() {
-   const items: ItemInterface[] = [{
-	   id: 1,
-	   name: 'Item 1',
-       selected: false
-	 }, {
-	   id: 2,
-	   name: 'Item 2',
-       selected: false
-	 }, {
-	   id: 3,
-	   name: 'Item 3',
-       selected: false
-	 }]
-	 return {
-	   items
-    }}
-})
+  name: "Home",
+  components: {
+    ItemsListComponent,
+  },
+  setup() {
+    const items = computed(() => {
+      return store.state.items;
+    });
+    const loading = computed(() => {
+      return store.state.loading;
+    });
+    onMounted(() => {
+      store.dispatch("loadItems");
+    });
+    const onSelectItem = (item: ItemInterface) => {
+      store.dispatch("selectItem", {
+        id: item.id,
+        selected: !item.selected,
+      });
+    };
+
+    return {
+      items,
+      loading,
+      onSelectItem,
+    };
+  },
+});
 </script>
