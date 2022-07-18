@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "cross-env VUE_APP_API_CLIENT=mock vue-cli-service serve --mode development",
+    "build": "cross-env VUE_APP_API_CLIENT=live vue-cli-service build --mode production",
     "test:unit": "vue-cli-service test:unit"
-  },
+    },
   "dependencies": {
+    "axios": "^0.27.2",
     "cross-env": "^7.0.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
